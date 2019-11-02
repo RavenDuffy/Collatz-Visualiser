@@ -2,9 +2,12 @@ class CollatzLine {
   constructor(startX, startY) {
     this.points = [];
     this.points.push(new Point(startX, startY));
-    this.totalPointCount;
-    this.pointSpacing;
     this.colour = "#fff";
+    // Variables below should not be initialised here
+    this.totalPointCount;
+    this.pointSpacingHorizontal;
+    this.pointSpacingVertical;
+    this.maxY;
   }
 
   addPoint(x, y) {
