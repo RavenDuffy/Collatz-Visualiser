@@ -48,8 +48,6 @@ function draw() {
   for (let l of lines) {
     context.strokeStyle = l.colour;
     for (let pi = 0; pi < l.points.length; pi++) {
-      context.fillStyle = l.points[pi].colour;
-      context.fillRect(l.points[pi].x, l.points[pi].y, 1, 1);
       if (l.points.length > 1 && pi > 0) {
         context.beginPath();
         context.moveTo(l.points[pi - 1].x, l.points[pi - 1].y);
@@ -57,6 +55,8 @@ function draw() {
         context.closePath();
         context.stroke();
       }
+      context.fillStyle = l.points[pi].colour;
+      context.fillRect(l.points[pi].x - 2, l.points[pi].y - 2, 4, 4);
     }
   }
 }
@@ -76,7 +76,7 @@ function calcCollatz(currentHeight) {
 function genLines(numOfLines) {
   let lines = [];
   for (let l = 0; l < numOfLines; l++) {
-    let line = new CollatzLine(0, Math.floor(Math.random() * (canvas.height * .5)));
+    let line = new CollatzLine(0, Math.floor(Math.random() * (canvas.height * 1)));
     lines.push(line);
   } return lines;
 }
