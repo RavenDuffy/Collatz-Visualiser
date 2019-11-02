@@ -2,6 +2,8 @@ class CollatzLine {
   constructor(startX, startY) {
     this.points = [];
     this.points.push(new Point(startX, startY));
+    this.totalPointCount;
+    this.pointSpacing;
     this.colour = "#fff";
   }
 
@@ -21,3 +23,6 @@ class Point {
     this.colour = "#f6f";
   }
 }
+
+
+// ADD REFRESH BUTTON

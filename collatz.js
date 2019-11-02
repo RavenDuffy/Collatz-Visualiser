@@ -5,9 +5,7 @@ const MAX_FPS = 60;
 var previousTime = 0;
 
 var lines;
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+var pointCount;
 
 function debounce(func, delay) {
   let inDebounce;
@@ -65,7 +63,7 @@ function updateLines() {
   for (let l of lines) {
     let lastPoint = l.getLastPoint();
     if (lastPoint.y != 1)
-      l.addPoint(lastPoint.x + 10, calcCollatz(lastPoint.y));
+      l.addPoint(lastPoint.x + l.pointSpacing, calcCollatz(lastPoint.y));
   }
 }
 
@@ -81,9 +79,28 @@ function genLines(numOfLines) {
   } return lines;
 }
 
+function calcAllCollatzRecursive() {
+  for (let l of lines) {
+    pointCount = 0;
+    l.totalPointCount = pointCount;
+    l.pointSpacing = canvas.width / pointCount;
+  } pointCount = 0;
+}
+
+// must use setTimeout in js for recursive to avoid stack size issues
+// the setTimeout is set in the higher level function
+function collatzRecursive(num) {
+  function cal(num, result) { // must surround in a tail call function, this stops stack issues
+    pointCount++;
+    return (num == 1) ? result : cal(calcCollatz(num), num);
+  } cal(num, calcCollatz(num));
+}
+
 $(window).on("resize", debounce(setCanvasSize, 50));
 
 $(document).ready(function() {
+  setCanvasSize();
   lines = genLines(1);
+  calcAllCollatzRecursive();
   mainloop();
 });
