@@ -58,6 +58,22 @@ function draw() {
       context.fillRect(l.points[pi].x - 2, l.points[pi].y * l.pointSpacingVertical - 2, 4, 4);
     }
   }
+
+  drawCoords();
+}
+
+function drawCoords() {
+  for (let l of lines) {
+    for (let p of l.points) {
+      if (p.colour && p.colour == p.activeColour) {
+        context.fillStyle = "#fff8";
+        context.fillRect(Math.floor(p.x) - 45, Math.floor(p.y * l.pointSpacingVertical) + 5, 90, 30);
+        context.font = "20px Arial";
+        context.fillStyle = "#000";
+        context.fillText(`${Math.floor(p.x)}, ${Math.floor(p.y * l.pointSpacingVertical)}`, Math.floor(p.x) - 40, Math.floor(p.y * l.pointSpacingVertical) + 27);
+      }
+    }
+  }
 }
 
 function updateLines() {
