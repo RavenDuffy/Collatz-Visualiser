@@ -23,7 +23,9 @@ class Point {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.colour = "#f6f";
+    this.defaultColour = "#f6f";
+    this.activeColour = "#3f5";
+    this.colour = this.defaultColour;
   }
 }
 

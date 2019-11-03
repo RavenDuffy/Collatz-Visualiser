@@ -6,6 +6,7 @@ var previousTime = 0;
 
 var lines;
 var pointCount;
+var mouseOnPoint;
 
 function debounce(func, delay) {
   let inDebounce;
@@ -64,6 +65,30 @@ function updateLines() {
     let lastPoint = l.getLastPoint();
     if (lastPoint.y != 1)
       l.addPoint(lastPoint.x + l.pointSpacingHorizontal, calcCollatz(lastPoint.y));
+    }
+}
+
+function isMouseOnPoint(e) {
+  for (let l of lines) {
+    for (let p of l.points) {
+      if (p) {
+        let grace = 5;
+        if ((Math.floor(p.x) <= e.clientX + grace && Math.floor(p.x) >= e.clientX - grace) &&
+            (Math.floor(p.y * l.pointSpacingVertical) <= e.clientY + grace && Math.floor(p.y * l.pointSpacingVertical) >= e.clientY - grace)) {
+              return l.points.indexOf(p);
+            }
+      }
+    } return null;
+  }
+}
+
+function activePoint(pointIndex) {
+  if (pointIndex) {
+    for (let l of lines) {
+      for (let p of l.points) {
+        if (p) { p.colour = p.defaultColour; }
+      } l.points[pointIndex].colour = l.points[pointIndex].activeColour;
+    }
   }
 }
 
@@ -82,15 +107,13 @@ function genLines(numOfLines) {
 function calcAllCollatzRecursive() {
   for (let l of lines) {
     pointCount = 0;
-    setTimeout(collatzRecursive(l.points[0].y, l), 0);
+    collatzRecursive(l.points[0].y, l);
     l.totalPointCount = pointCount;
     l.pointSpacingHorizontal = canvas.width / pointCount;
     l.pointSpacingVertical = canvas.height / l.maxY;
   } pointCount = 0;
 }
 
-// must use setTimeout in js for recursive to avoid stack size issues
-// the setTimeout is set in the higher level function
 function collatzRecursive(num, line) {
   function cal(num, result) { // must surround in a tail call function, this stops stack issues
     pointCount++;
@@ -100,11 +123,17 @@ function collatzRecursive(num, line) {
   } cal(num, calcCollatz(num));
 }
 
-$(window).on("resize", debounce(setCanvasSize, 50));
-
 $(document).ready(function() {
   setCanvasSize();
+
+  $(window).on("resize", debounce(setCanvasSize, 50));
+
+  canvas.addEventListener("mousemove", function(e) {
+    activePoint(isMouseOnPoint(e));
+  });
+
   lines = genLines(1);
   calcAllCollatzRecursive();
+
   mainloop();
 });
